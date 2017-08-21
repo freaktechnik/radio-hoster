@@ -1,0 +1,24 @@
+{
+  "name": "radio-hoster",
+  "version": "1.0.0",
+  "description": "Auto hosts talk shows on Twitch to create a radio channel of sorts.",
+  "main": "index.js",
+  "dependencies": {
+    "twitch": "^0.5.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/freaktechnik/radio-hoster.git"
+  },
+  "author": "Martin Giger (https://humanoids.be)",
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/freaktechnik/radio-hoster/issues"
+  },
+  "homepage": "https://github.com/freaktechnik/radio-hoster#readme"
+}

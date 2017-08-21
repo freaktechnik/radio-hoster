@@ -1,0 +1,27 @@
+[
+    {
+        "channels": [
+            "totalbiscuit",
+            "shaboozey",
+            "crendor"
+        ],
+        "start": "Tu 19:00",
+        "end": "Tu 22:00"
+    },
+    {
+        "channels": [
+            "itmejp",
+            "cohhcarnage",
+            "ezekiel_iii"
+        ],
+        "start": "We 19:00",
+        "end": "We 22:00"
+    },
+    {
+        "channels": [
+            "linustech"
+        ],
+        "start": "Fr 23:30",
+        "end": "Sa 00:30"
+    }
+]
