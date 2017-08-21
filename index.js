@@ -1,6 +1,8 @@
 const StreamFilter = require("./lib/stream-filter");
 const tmi = require("tmi.js");
 
+//TODO avoid surpassing host rate/handle that
+
 const { CLIENT_ID, TOKEN, USERNAME } = process.env;
 const LANGUAGE = "en";
 
@@ -27,7 +29,7 @@ const RadioHoster = {
         ]
     }),
     talkFilter: new StreamFilter({
-        game: "Talk+Shows",
+        game: "Talk Shows",
         languageCode: LANGUAGE,
         type: "live"
     }),
