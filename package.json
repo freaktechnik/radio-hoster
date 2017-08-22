@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/freaktechnik/radio-hoster/issues"
   },
-  "homepage": "https://github.com/freaktechnik/radio-hoster#readme"
+  "homepage": "https://github.com/freaktechnik/radio-hoster#readme",
+  "engines": {
+    "node" ">=6.11.1"
+  }
 }
