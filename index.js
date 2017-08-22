@@ -1,10 +1,12 @@
 const StreamFilter = require("./lib/stream-filter");
 const tmi = require("tmi.js");
 
-//TODO avoid surpassing host rate/handle that
+//TODO avoid surpassing host rate/handle that -> 3 hosts per 30mins -> 1 host per 10mins
 
 const { CLIENT_ID, TOKEN, USERNAME } = process.env;
 const LANGUAGE = "en";
+
+const IGNORE_LIVE = require("./data/ignore-livestate."+LANGUAGE+".json");
 
 const headers = {
     "Client-ID": CLIENT_ID,
@@ -28,15 +30,22 @@ const RadioHoster = {
             `#${USERNAME}`
         ]
     }),
-    talkFilter: new StreamFilter({
-        game: "Talk Shows",
-        languageCode: LANGUAGE,
-        type: "live"
-    }),
-    musicFilter: new StreamFilter({
-        game: "Music",
-        type: "live"
-    }),
+    filters: [
+        new StreamFilter({
+            game: "Gamescom 2017",
+            languageCode: LANGUAGE,
+            type: "live"
+        }),
+        new StreamFilter({
+            game: "Talk Shows",
+            languageCode: LANGUAGE,
+            type: "live"
+        }),
+        new StreamFilter({
+            game: "Music",
+            type: "live"
+        })
+    ],
     async getStreams(filter) {
         const streams = await new Promise((resolve, reject) => {
             this.chatClient.api({
@@ -56,7 +65,7 @@ const RadioHoster = {
         return streams[0].channel.name;
     },
     async isCurrentChannelLive() {
-        if(this.currentChannel) {
+        if(this.currentChannel && !IGNORE_LIVE.includes(this.currentChannel)) {
             const currentStream = await new Promise((resolve, reject) => {
                 this.chatClient.api({
                     url: `https://api.twitch.tv/kraken/streams/${this.currentChannel}`,
@@ -69,7 +78,7 @@ const RadioHoster = {
                     resolve(body);
                 });
             });
-            return currentStream.stream && (currentStream.stream.game === this.talkFilter.filters.game || currentStream.stream.game === this.musicFilter.filters.game);
+            return currentStream.stream && this.filters.some((f) => f.filters.game === currentStream.stream.game);
         }
         return false;
     },
@@ -80,15 +89,12 @@ const RadioHoster = {
         if(await this.isCurrentChannelLive()) {
             return this.currentChannel;
         }
-        console.log("Getting most popular talk show...");
-        const talkStreams = await this.getStreams(this.talkFilter);
-        if(talkStreams && talkStreams.length) {
-            return this.getBestStream(talkStreams);
-        }
-        console.log("Getting most popular music stream...");
-        const musicStreams = await this.getStreams(this.musicFilter);
-        if(musicStreams && musicStreams.length) {
-            return this.getBestStream(musicStreams);
+        for(const filter of this.filters) {
+            console.log("Getting most popular", filter.filters.game, "stream...");
+            const streams = await this.getStreams(filter);
+            if(streams && streams.length) {
+                return this.getBestStream(streams);
+            }
         }
         console.log("Nothing to do.");
         return this.currentChannel;
@@ -96,9 +102,8 @@ const RadioHoster = {
     async setNextStream(login) {
         //const chat = this.client.getChatClient();
         //await chat.send(`PRIVMSG #${chat._userName} .host ${login}`);
-        await this.chatClient.host(USERNAME, login);
+        await this.chatClient.host(USERNAME, login).catch(() => console.log("Can't host", login, "atm"));
         console.log("Now hosting", login);
-        this.currentChannel = login;
     },
     async update() {
         const nextStream = await this.getNextStream();
@@ -109,6 +114,9 @@ const RadioHoster = {
     init() {
         this.chatClient.connect();
         this.chatClient.on("connected", () => this.update());
+        this.chatClient.on("hosting", (c, target) => {
+            this.currentChannel = target;
+        });
         setInterval(() => this.update(), 60000);
     }
 };
