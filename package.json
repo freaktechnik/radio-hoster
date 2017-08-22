@@ -22,6 +22,6 @@
   },
   "homepage": "https://github.com/freaktechnik/radio-hoster#readme",
   "engines": {
-    "node" ">=6.11.1"
+    "node": ">=6.11.1"
   }
 }
