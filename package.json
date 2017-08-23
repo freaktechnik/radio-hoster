@@ -6,9 +6,12 @@
   "dependencies": {
     "tmi.js": "^1.2.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^4.5.0",
+    "eslint-plugin-freaktechnik": "^2.5.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "eslint index.js lib/",
     "start": "node index.js"
   },
   "repository": {
@@ -22,6 +25,6 @@
   },
   "homepage": "https://github.com/freaktechnik/radio-hoster#readme",
   "engines": {
-    "node": ">=6.11.1"
+    "node": ">=8.4.0"
   }
 }

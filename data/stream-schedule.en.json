@@ -5,8 +5,8 @@
             "shaboozey",
             "crendor"
         ],
-        "start": "Tu 19:00",
-        "end": "Tu 22:00"
+        "start": "2 19:00",
+        "end": "2 22:00"
     },
     {
         "channels": [
@@ -14,14 +14,14 @@
             "cohhcarnage",
             "ezekiel_iii"
         ],
-        "start": "We 19:00",
-        "end": "We 22:00"
+        "start": "3 21:00",
+        "end": "4 00:00"
     },
     {
         "channels": [
             "linustech"
         ],
-        "start": "Fr 23:30",
-        "end": "Sa 00:30"
+        "start": "6 23:30",
+        "end": "7 00:30"
     }
 ]

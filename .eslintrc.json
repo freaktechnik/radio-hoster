@@ -1,0 +1,9 @@
+{
+    "parserOptions": {
+        "ecmaVersion": 2017
+    },
+    "rules": {
+        "no-console": 0
+    },
+    "extends": "plugin:freaktechnik/node"
+}
