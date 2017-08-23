@@ -35,11 +35,11 @@ const StreamFilter = require("./lib/stream-filter"),
             ]
         }),
         filters: [
-            new StreamFilter({
+            /*new StreamFilter({
                 game: "Gamescom 2017",
                 languageCode: LANGUAGE,
                 type: "live"
-            }),
+            }),*/
             new StreamFilter({
                 game: "Talk Shows",
                 languageCode: LANGUAGE,
