@@ -121,7 +121,7 @@ const StreamFilter = require("./lib/stream-filter"),
         async update() {
             if(this.hostScheduler.shouldCheck()) {
                 const nextStream = await this.getNextStream(),
-                    nextShow = this.StreamSchedule.getNextScheduledShow();
+                    nextShow = this.streamSchedule.getNextScheduledShow();
                 if(nextStream != this.currentChannel && this.hostScheduler.canHost(nextStream, nextShow)) {
                     await this.setNextStream(nextStream);
                 }
