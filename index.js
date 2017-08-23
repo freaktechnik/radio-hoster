@@ -17,7 +17,7 @@ const StreamFilter = require("./lib/stream-filter"),
 
     RadioHoster = {
         hostScheduler: new HostScheduler(),
-        streamSchedule: new StreamSchedule(),
+        streamSchedule: new StreamSchedule(LANGUAGE),
         chatClient: tmi.client({
             options: {
                 clientId: CLIENT_ID
