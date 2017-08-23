@@ -132,6 +132,7 @@ const StreamFilter = require("./lib/stream-filter"),
             this.chatClient.on("connected", () => this.update());
             this.chatClient.on("hosting", (c, target) => {
                 this.currentChannel = target;
+                this.hostScheduler.onHost();
             });
             setInterval(() => this.update(), 60000);
         }
