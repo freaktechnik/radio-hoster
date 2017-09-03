@@ -82,7 +82,7 @@ const StreamFilter = require("./lib/stream-filter"),
                         resolve(body);
                     });
                 });
-                return currentStream.stream && this.filters.some((f) => f.filters.game === currentStream.stream.game) && !currentStream.stream.channel.status.includes("24/7");
+                return currentStream.stream && this.filters.some((f) => f.filters.game === currentStream.stream.game) && !currentStream.stream.channel.status.includes("24/7") && currentStream.stream.stream_type === "live";
             }
             return false;
         },
