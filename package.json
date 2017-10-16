@@ -10,7 +10,7 @@
     "ajv": "^5.2.2",
     "ava": "^0.22.0",
     "eslint": "^4.5.0",
-    "eslint-plugin-freaktechnik": "^2.5.0"
+    "eslint-plugin-freaktechnik": "^5.1.5"
   },
   "scripts": {
     "test": "eslint index.js lib/",
