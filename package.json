@@ -4,16 +4,18 @@
   "description": "Auto hosts talk shows on Twitch to create a radio channel of sorts.",
   "main": "index.js",
   "dependencies": {
+    "@freaktechnik/eslint-config-node": "^5.1.3",
+    "@freaktechnik/eslint-config-test": "^5.1.5",
     "tmi.js": "^1.2.1"
   },
   "devDependencies": {
     "ajv": "^5.2.2",
     "ava": "^0.22.0",
-    "eslint": "^4.5.0",
-    "eslint-plugin-freaktechnik": "^2.5.0"
+    "eslint": "^4.5.0"
   },
   "scripts": {
-    "test": "eslint index.js lib/",
+    "lint": "eslint index.js lib/ test/ --ext js,json",
+    "test": "npm run lint && ava",
     "start": "node index.js"
   },
   "repository": {

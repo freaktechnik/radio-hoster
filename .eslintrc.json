@@ -5,5 +5,5 @@
     "rules": {
         "no-console": 0
     },
-    "extends": "plugin:freaktechnik/node"
+    "extends": "@freaktechnik/eslint-config-node"
 }
