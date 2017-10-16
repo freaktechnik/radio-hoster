@@ -5,10 +5,12 @@ const StreamFilter = require("./lib/stream-filter"),
     HostScheduler = require("./lib/host-scheduler"),
     tmi = require("tmi.js"),
 
-    { CLIENT_ID, TOKEN, USERNAME } = process.env,
+    {
+        CLIENT_ID, TOKEN, USERNAME
+    } = process.env,
     LANGUAGE = "en",
-
     IGNORE_LIVE = require(`./data/ignore-livestate.${LANGUAGE}.json`),
+    MINUTE = 60000,
 
     headers = {
         "Client-ID": CLIENT_ID,
@@ -30,9 +32,7 @@ const StreamFilter = require("./lib/stream-filter"),
                 username: USERNAME,
                 password: `oauth:${TOKEN}`
             },
-            channels: [
-                `#${USERNAME}`
-            ]
+            channels: [ `#${USERNAME}` ]
         }),
         filters: [
             /*new StreamFilter({
@@ -66,7 +66,8 @@ const StreamFilter = require("./lib/stream-filter"),
             return filter.filterStreams(streams);
         },
         getBestStream(streams) {
-            return streams[0].channel.name;
+            const [ firstStream ] = streams;
+            return firstStream.channel.name;
         },
         async isCurrentChannelLive() {
             if(this.currentChannel && !IGNORE_LIVE.includes(this.currentChannel)) {
@@ -134,7 +135,7 @@ const StreamFilter = require("./lib/stream-filter"),
                 this.currentChannel = target;
                 this.hostScheduler.onHost();
             });
-            setInterval(() => this.update(), 60000);
+            setInterval(() => this.update(), MINUTE);
         }
     };
 
