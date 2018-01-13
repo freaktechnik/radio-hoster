@@ -3,7 +3,8 @@
 const StreamFilter = require("./lib/stream-filter"),
     StreamSchedule = require("./lib/stream-schedule"),
     HostScheduler = require("./lib/host-scheduler"),
-    tmi = require("tmi.js"),
+    Twitch = require("twitch"),
+    TwitchPrivateMessage = require("twitch/lib/Chat/StandardCommands/PrivateMessage"),
 
     {
         CLIENT_ID, TOKEN, USERNAME
@@ -12,28 +13,15 @@ const StreamFilter = require("./lib/stream-filter"),
     IGNORE_LIVE = require(`./data/ignore-livestate.${LANGUAGE}.json`),
     MINUTE = 60000,
 
-    headers = {
-        "Client-ID": CLIENT_ID,
-        "Accept": "application/vnd.twitchtv.v3+json"
-    },
-
     RadioHoster = {
         hostScheduler: new HostScheduler(),
         streamSchedule: new StreamSchedule(LANGUAGE),
-        chatClient: tmi.client({
-            options: {
-                clientId: CLIENT_ID
-            },
-            connection: {
-                secure: true,
-                reconnect: true
-            },
-            identity: {
-                username: USERNAME,
-                password: `oauth:${TOKEN}`
-            },
-            channels: [ `#${USERNAME}` ]
-        }),
+        client: Twitch.withConfig(
+            CLIENT_ID,
+            TOKEN,
+            null,
+            {}
+        ),
         filters: [
             /*new StreamFilter({
                 game: "Gamescom 2017",
@@ -51,18 +39,7 @@ const StreamFilter = require("./lib/stream-filter"),
             })
         ],
         async getStreams(filter) {
-            const streams = await new Promise((resolve, reject) => {
-                this.chatClient.api({
-                    url: `https://api.twitch.tv/kraken/streams${filter.getParams()}`,
-                    headers
-                }, (err, res, body) => {
-                    if(err) {
-                        reject(err);
-                        return;
-                    }
-                    resolve(body.streams);
-                });
-            });
+            const streams = await this.client.api.streams.getStreams(...filter.getParams());
             return filter.filterStreams(streams);
         },
         getBestStream(streams) {
@@ -71,19 +48,8 @@ const StreamFilter = require("./lib/stream-filter"),
         },
         async isCurrentChannelLive() {
             if(this.currentChannel && !IGNORE_LIVE.includes(this.currentChannel)) {
-                const currentStream = await new Promise((resolve, reject) => {
-                    this.chatClient.api({
-                        url: `https://api.twitch.tv/kraken/streams/${this.currentChannel}`,
-                        headers
-                    }, (err, res, body) => {
-                        if(err) {
-                            reject(err);
-                            return;
-                        }
-                        resolve(body);
-                    });
-                });
-                return currentStream.stream && this.filters.some((f) => f.filters.game === currentStream.stream.game) && !currentStream.stream.channel.status.includes("24/7") && currentStream.stream.stream_type === "live";
+                const currentStream = await this.client.streams.getStreamByChannel(this.currentChannel);
+                return this.filters.some((f) => f.filters.game === currentStream.game) && !currentStream.channel.status.includes("24/7") && currentStream.type === "live";
             }
             return false;
         },
@@ -114,9 +80,11 @@ const StreamFilter = require("./lib/stream-filter"),
             return this.currentChannel;
         },
         async setNextStream(login) {
-            //const chat = this.client.getChatClient();
-            //await chat.send(`PRIVMSG #${chat._userName} .host ${login}`);
-            await this.chatClient.host(USERNAME, login).catch(() => console.log("Can't host", login, "atm"));
+            await this.client.getChatClient().sendMessage(TwitchPrivateMessage, {
+                target: USERNAME,
+                message: `.host ${login}`
+            })
+                .catch(() => console.log("Can't host", login, "atm"));
             console.log("Now hosting", login);
         },
         async update() {
@@ -129,13 +97,16 @@ const StreamFilter = require("./lib/stream-filter"),
             }
         },
         init() {
-            this.chatClient.connect();
-            this.chatClient.on("connected", () => this.update());
-            this.chatClient.on("hosting", (c, target) => {
-                this.currentChannel = target;
-                this.hostScheduler.onHost();
-            });
-            setInterval(() => this.update(), MINUTE);
+            this.client.getChatClient().then((c) => {
+                c.join(USERNAME);
+                c.onHost((chan, target) => {
+                    this.currentChannel = target;
+                    this.hostScheduler.onHost();
+                });
+                this.update();
+                setInterval(() => this.update(), MINUTE);
+            })
+                .catch(console.error);
         }
     };
 
