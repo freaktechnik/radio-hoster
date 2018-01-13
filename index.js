@@ -96,7 +96,7 @@ const StreamFilter = require("./lib/stream-filter"),
         },
         init() {
             this.client.getChatClient().then((c) => {
-                c.join(USERNAME);
+                c.join(`#${USERNAME}`);
                 c.onHost((chan, target) => {
                     this.currentChannel = target;
                 });
