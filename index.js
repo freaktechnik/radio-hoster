@@ -4,7 +4,6 @@ const StreamFilter = require("./lib/stream-filter"),
     StreamSchedule = require("./lib/stream-schedule"),
     HostScheduler = require("./lib/host-scheduler"),
     { default: Twitch } = require("twitch"),
-    TwitchPrivateMessage = require("twitch/lib/Chat/StandardCommands/PrivateMessage"),
 
     {
         CLIENT_ID, TOKEN, USERNAME
@@ -80,11 +79,10 @@ const StreamFilter = require("./lib/stream-filter"),
             return this.currentChannel;
         },
         async setNextStream(login) {
-            await this.client.getChatClient().sendMessage(TwitchPrivateMessage, {
-                target: USERNAME,
-                message: `.host ${login}`
-            })
-                .catch(() => console.log("Can't host", login, "atm"));
+            await this.client.getChatClient().host(login)
+                .catch(() => console.warn("Can't host", login, "atm"));
+            this.hostScheduler.onHost();
+            this.currentChannel = login;
             console.log("Now hosting", login);
         },
         async update() {
@@ -101,10 +99,14 @@ const StreamFilter = require("./lib/stream-filter"),
                 c.join(USERNAME);
                 c.onHost((chan, target) => {
                     this.currentChannel = target;
-                    this.hostScheduler.onHost();
                 });
-                this.update();
-                setInterval(() => this.update(), MINUTE);
+                c.onHostsRemaining((channel, remainingHosts) => {
+                    if(channel === USERNAME) {
+                        this.hostScheduler.reportRemaining(remainingHosts);
+                    }
+                });
+                setInterval(() => this.update().catch(console.error), MINUTE);
+                return this.update();
             })
                 .catch(console.error);
         }
