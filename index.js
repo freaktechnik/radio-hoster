@@ -16,7 +16,7 @@ const StreamFilter = require("./lib/stream-filter"),
     RadioHoster = {
         hostScheduler: new HostScheduler(),
         streamSchedule: new StreamSchedule(LANGUAGE),
-        client: Twitch.withConfig(
+        client: Twitch.withCredentials(
             CLIENT_ID,
             TOKEN,
             null,
