@@ -3,7 +3,7 @@
 const StreamFilter = require("./lib/stream-filter"),
     StreamSchedule = require("./lib/stream-schedule"),
     HostScheduler = require("./lib/host-scheduler"),
-    Twitch = require("twitch"),
+    { default: Twitch } = require("twitch"),
     TwitchPrivateMessage = require("twitch/lib/Chat/StandardCommands/PrivateMessage"),
 
     {
