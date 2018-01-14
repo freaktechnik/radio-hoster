@@ -11,6 +11,7 @@ const StreamFilter = require("./lib/stream-filter"),
     LANGUAGE = "en",
     IGNORE_LIVE = require(`./data/ignore-livestate.${LANGUAGE}.json`),
     MINUTE = 60000,
+    DEBUG_LOG_LEVEL = 1,
 
     RadioHoster = {
         hostScheduler: new HostScheduler(),
@@ -81,7 +82,7 @@ const StreamFilter = require("./lib/stream-filter"),
         },
         async setNextStream(login) {
             console.log("Getting chat client");
-            const chatClient = await this.client.getChatClient('default', 1);
+            const chatClient = await this.client.getChatClient('default', DEBUG_LOG_LEVEL);
             try {
                 console.log("hosting", login);
                 await chatClient.host(login);
@@ -105,7 +106,7 @@ const StreamFilter = require("./lib/stream-filter"),
             }
         },
         init() {
-            this.client.getChatClient('default', 1).then((c) => {
+            this.client.getChatClient('default', DEBUG_LOG_LEVEL).then((c) => {
                 c.join(`#${USERNAME}`);
                 c.onHost((chan, target) => {
                     this.currentChannel = target;
