@@ -11,7 +11,7 @@ const StreamFilter = require("./lib/stream-filter"),
     LANGUAGE = "en",
     IGNORE_LIVE = require(`./data/ignore-livestate.${LANGUAGE}.json`),
     MINUTE = 60000,
-    DEBUG_LOG_LEVEL = 1,
+    DEBUG_LOG_LEVEL = 0,
 
     RadioHoster = {
         hostScheduler: new HostScheduler(),
@@ -105,7 +105,6 @@ const StreamFilter = require("./lib/stream-filter"),
             const chatClient = await this.client.getChatClient('default', DEBUG_LOG_LEVEL);
             chatClient.onHost((chan, target) => {
                 if(chan.endsWith(USERNAME)) {
-                    console.log("onhost", target);
                     this.currentChannel = target;
                 }
             });
