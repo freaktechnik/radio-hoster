@@ -47,9 +47,22 @@ const StreamFilter = require("./lib/stream-filter"),
             const [ firstStream ] = streams;
             return firstStream.channel.name;
         },
+        currentId() {
+            if(!this._cachedId || this._cachedId.username != this.currentChannel) {
+                this._cachedId = {
+                    username: this.currentChannel
+                };
+                return this.client.user.getUserByName(this.currentChannel).then((user) => {
+                    this._cachedId.id = user._id;
+                    return user._id;
+                });
+            }
+            return Promise.resolve(this._cachedId.id);
+        },
         async isCurrentChannelLive() {
             if(this.currentChannel && !IGNORE_LIVE.includes(this.currentChannel)) {
-                const currentStream = await this.client.streams.getStreamByChannel(this.currentChannel);
+                const currentId = await this.currentId(),
+                    currentStream = await this.client.streams.getStreamByChannel(currentId);
                 return this.filters.some((f) => f.filters.game === currentStream.game) && !currentStream.channel.status.includes("24/7") && currentStream.type === "live";
             }
             return false;
