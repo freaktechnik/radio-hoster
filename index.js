@@ -106,7 +106,7 @@ const StreamFilter = require("./lib/stream-filter"),
             }
         },
         async init() {
-            const chatClient = this.client.getChatClient('default', DEBUG_LOG_LEVEL);
+            const chatClient = await this.client.getChatClient('default', DEBUG_LOG_LEVEL);
             chatClient.onHost((chan, target) => {
                 this.currentChannel = target;
             });
