@@ -105,22 +105,21 @@ const StreamFilter = require("./lib/stream-filter"),
                 }
             }
         },
-        init() {
-            this.client.getChatClient('default', DEBUG_LOG_LEVEL).then((c) => {
-                c.join(`#${USERNAME}`);
-                c.onHost((chan, target) => {
-                    this.currentChannel = target;
-                });
-                c.onHostsRemaining((channel, remainingHosts) => {
-                    if(channel === USERNAME) {
-                        this.hostScheduler.reportRemaining(remainingHosts);
-                    }
-                });
-                setInterval(() => this.update().catch(console.error), MINUTE);
-                return this.update();
-            })
-                .catch(console.error);
+        async init() {
+            const chatClient = this.client.getChatClient('default', DEBUG_LOG_LEVEL);
+            chatClient.onHost((chan, target) => {
+                this.currentChannel = target;
+            });
+            chatClient.onHostsRemaining((channel, remainingHosts) => {
+                if(channel === USERNAME) {
+                    this.hostScheduler.reportRemaining(remainingHosts);
+                }
+            });
+            await chatClient.connect();
+            await chatClient.join(`#${USERNAME}`);
+            setInterval(() => this.update().catch(console.error), MINUTE);
+            return this.update();
         }
     };
 
-RadioHoster.init();
+RadioHoster.init().catch(console.error);
