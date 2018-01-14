@@ -81,12 +81,9 @@ const StreamFilter = require("./lib/stream-filter"),
             return this.currentChannel;
         },
         async setNextStream(login) {
-            console.log("Getting chat client");
             const chatClient = await this.client.getChatClient('default', DEBUG_LOG_LEVEL);
             try {
-                console.log("hosting", login);
                 await chatClient.host(login);
-                console.log("hosted");
             }
             catch(e) {
                 console.warn("Can't host", login, "atm");
@@ -99,7 +96,6 @@ const StreamFilter = require("./lib/stream-filter"),
             if(this.hostScheduler.shouldCheck()) {
                 const nextStream = await this.getNextStream(),
                     nextShow = this.streamSchedule.getNextScheduledShow();
-                console.log(nextStream, nextShow, this.currentChannel, this.hostScheduler.hostTimestamps);
                 if(nextStream != this.currentChannel && this.hostScheduler.canHost(nextStream, nextShow)) {
                     await this.setNextStream(nextStream);
                 }
