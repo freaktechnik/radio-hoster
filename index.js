@@ -103,6 +103,7 @@ const StreamFilter = require("./lib/stream-filter"),
         },
         async init() {
             const chatClient = await this.client.getChatClient('default', DEBUG_LOG_LEVEL);
+            await new Promise((resolve) => chatClient.onRegister(resolve));
             chatClient.onHost((chan, target) => {
                 if(chan.endsWith(USERNAME)) {
                     console.log("onhost", target);
