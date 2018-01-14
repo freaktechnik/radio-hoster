@@ -104,10 +104,13 @@ const StreamFilter = require("./lib/stream-filter"),
         async init() {
             const chatClient = await this.client.getChatClient('default', DEBUG_LOG_LEVEL);
             chatClient.onHost((chan, target) => {
-                this.currentChannel = target;
+                if(chan.endsWith(USERNAME)) {
+                    console.log("onhost", target);
+                    this.currentChannel = target;
+                }
             });
             chatClient.onHostsRemaining((channel, remainingHosts) => {
-                if(channel === USERNAME) {
+                if(channel.endsWith(USERNAME)) {
                     this.hostScheduler.reportRemaining(remainingHosts);
                 }
             });
