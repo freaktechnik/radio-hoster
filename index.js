@@ -79,8 +79,13 @@ const StreamFilter = require("./lib/stream-filter"),
             return this.currentChannel;
         },
         async setNextStream(login) {
-            await this.client.getChatClient().host(login)
-                .catch(() => console.warn("Can't host", login, "atm"));
+            const chatClient = await this.client.getChatClient();
+            try {
+                await chatClient.host(login);
+            }
+            catch(e) {
+                console.warn("Can't host", login, "atm");
+            }
             this.hostScheduler.onHost();
             this.currentChannel = login;
             console.log("Now hosting", login);
