@@ -40,11 +40,11 @@ const StreamFilter = require("./lib/stream-filter"),
         async getStreams(filter) {
             const streamParams = filter.getParams(),
                 streams = await this.client.streams.getStreams(...streamParams);
-            console.log(streams);
             return filter.filterStreams(streams);
         },
         getBestStream(streams) {
             const [ firstStream ] = streams;
+            console.log(firstStream.channel.name);
             return firstStream.channel.name;
         },
         async isCurrentChannelLive() {
@@ -73,6 +73,7 @@ const StreamFilter = require("./lib/stream-filter"),
             for(const filter of this.filters) {
                 console.log("Getting most popular", filter.filters.game, "stream...");
                 const streams = await this.getStreams(filter);
+                console.log(streams);
                 if(streams && streams.length) {
                     return this.getBestStream(streams);
                 }
@@ -96,6 +97,7 @@ const StreamFilter = require("./lib/stream-filter"),
             if(this.hostScheduler.shouldCheck()) {
                 const nextStream = await this.getNextStream(),
                     nextShow = this.streamSchedule.getNextScheduledShow();
+                console.log(nextStream, nextShow, this.currentChannel, this.hostScheduler.hostTimestamps);
                 if(nextStream != this.currentChannel && this.hostScheduler.canHost(nextStream, nextShow)) {
                     await this.setNextStream(nextStream);
                 }
