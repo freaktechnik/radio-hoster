@@ -81,7 +81,7 @@ const StreamFilter = require("./lib/stream-filter"),
         },
         async setNextStream(login) {
             console.log("Getting chat client");
-            const chatClient = await this.client.getChatClient();
+            const chatClient = await this.client.getChatClient('default', 1);
             try {
                 console.log("hosting", login);
                 await chatClient.host(login);
@@ -105,7 +105,7 @@ const StreamFilter = require("./lib/stream-filter"),
             }
         },
         init() {
-            this.client.getChatClient().then((c) => {
+            this.client.getChatClient('default', 1).then((c) => {
                 c.join(`#${USERNAME}`);
                 c.onHost((chan, target) => {
                     this.currentChannel = target;
