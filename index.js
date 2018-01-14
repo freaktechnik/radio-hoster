@@ -11,7 +11,7 @@ const StreamFilter = require("./lib/stream-filter"),
     LANGUAGE = "en",
     IGNORE_LIVE = require(`./data/ignore-livestate.${LANGUAGE}.json`),
     MINUTE = 60000,
-    DEBUG_LOG_LEVEL = 0,
+    DEBUG_LOG_LEVEL = 1,
 
     RadioHoster = {
         hostScheduler: new HostScheduler(),
