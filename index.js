@@ -44,7 +44,6 @@ const StreamFilter = require("./lib/stream-filter"),
         },
         getBestStream(streams) {
             const [ firstStream ] = streams;
-            console.log(firstStream.channel.name);
             return firstStream.channel.name;
         },
         async isCurrentChannelLive() {
@@ -73,7 +72,6 @@ const StreamFilter = require("./lib/stream-filter"),
             for(const filter of this.filters) {
                 console.log("Getting most popular", filter.filters.game, "stream...");
                 const streams = await this.getStreams(filter);
-                console.log(streams);
                 if(streams && streams.length) {
                     return this.getBestStream(streams);
                 }
@@ -82,8 +80,10 @@ const StreamFilter = require("./lib/stream-filter"),
             return this.currentChannel;
         },
         async setNextStream(login) {
+            console.log("Getting chat client");
             const chatClient = await this.client.getChatClient();
             try {
+                console.log("hosting", login);
                 await chatClient.host(login);
             }
             catch(e) {
