@@ -38,7 +38,9 @@ const StreamFilter = require("./lib/stream-filter"),
             })
         ],
         async getStreams(filter) {
-            const streams = await this.client.streams.getStreams(...filter.getParams());
+            const streamParams = filter.getParams(),
+                streams = await this.client.streams.getStreams(...streamParams);
+            console.log(streams);
             return filter.filterStreams(streams);
         },
         getBestStream(streams) {
