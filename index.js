@@ -85,6 +85,7 @@ const StreamFilter = require("./lib/stream-filter"),
             try {
                 console.log("hosting", login);
                 await chatClient.host(login);
+                console.log("hosted");
             }
             catch(e) {
                 console.warn("Can't host", login, "atm");
