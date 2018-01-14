@@ -103,7 +103,6 @@ const StreamFilter = require("./lib/stream-filter"),
         },
         async init() {
             const chatClient = await this.client.getChatClient('default', DEBUG_LOG_LEVEL);
-            await new Promise((resolve) => chatClient.onRegister(resolve));
             chatClient.onHost((chan, target) => {
                 if(chan.endsWith(USERNAME)) {
                     console.log("onhost", target);
@@ -115,7 +114,9 @@ const StreamFilter = require("./lib/stream-filter"),
                     this.hostScheduler.reportRemaining(remainingHosts);
                 }
             });
+            const registered = new Promise((resolve) => chatClient.onRegister(resolve));
             await chatClient.connect();
+            await registered;
             await chatClient.join(`#${USERNAME}`);
             await this.update();
             setInterval(() => this.update().catch(console.error), MINUTE);
