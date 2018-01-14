@@ -53,8 +53,8 @@ const StreamFilter = require("./lib/stream-filter"),
                     username: this.currentChannel
                 };
                 return this.client.users.getUserByName(this.currentChannel).then((user) => {
-                    this._cachedId.id = user._id;
-                    return user._id;
+                    this._cachedId.id = user.id;
+                    return user.id;
                 });
             }
             return Promise.resolve(this._cachedId.id);
