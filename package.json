@@ -4,7 +4,7 @@
   "description": "Auto hosts talk shows on Twitch to create a radio channel of sorts.",
   "main": "index.js",
   "dependencies": {
-    "twitch": "^0.15.0"
+    "twitch": "^0.16.0"
   },
   "devDependencies": {
     "@freaktechnik/eslint-config-node": "^6.3.5",
