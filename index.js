@@ -52,7 +52,7 @@ const StreamFilter = require("./lib/stream-filter"),
                 this._cachedId = {
                     username: this.currentChannel
                 };
-                return this.client.users.getUserByName(this.currentChannel).then((user) => {
+                return this.client.helix.users.getUserByName(this.currentChannel).then((user) => {
                     this._cachedId.id = user.id;
                     return user.id;
                 });
