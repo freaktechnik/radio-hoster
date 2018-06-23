@@ -11,7 +11,7 @@
     "@freaktechnik/eslint-config-test": "^6.4.0",
     "ajv": "^6.5.1",
     "ava": "^0.25.0",
-    "eslint": "^4.19.1"
+    "eslint": "^5.0.0"
   },
   "scripts": {
     "lint": "eslint index.js lib/ test/ --ext js,json",
