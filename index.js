@@ -4,6 +4,7 @@ const StreamFilter = require("./lib/stream-filter"),
     StreamSchedule = require("./lib/stream-schedule"),
     HostScheduler = require("./lib/host-scheduler"),
     { default: Twitch } = require("twitch"),
+    { default: TwitchChatClient } = require("twitch-chat-client"),
 
     {
         CLIENT_ID, TOKEN, USERNAME
@@ -11,17 +12,19 @@ const StreamFilter = require("./lib/stream-filter"),
     LANGUAGE = "en",
     IGNORE_LIVE = require(`./data/ignore-livestate.${LANGUAGE}.json`),
     MINUTE = 60000,
-    DEBUG_LOG_LEVEL = 0,
+
+    client = Twitch.withCredentials(
+        CLIENT_ID,
+        TOKEN,
+        null,
+        {}
+    ),
 
     RadioHoster = {
         hostScheduler: new HostScheduler(),
         streamSchedule: new StreamSchedule(LANGUAGE),
-        client: Twitch.withCredentials(
-            CLIENT_ID,
-            TOKEN,
-            null,
-            {}
-        ),
+        client,
+        chatClient: new TwitchChatClient(USERNAME, TOKEN, client),
         filters: [
             /*new StreamFilter({
                 game: "Gamescom 2017",
@@ -94,9 +97,8 @@ const StreamFilter = require("./lib/stream-filter"),
             return this.currentChannel;
         },
         async setNextStream(login) {
-            const chatClient = await this.client.getChatClient('default', DEBUG_LOG_LEVEL);
             try {
-                await chatClient.host(login);
+                await this.chatClient.host(login);
                 this.hostScheduler.onHost();
                 this.currentChannel = login;
                 console.log("Now hosting", login);
@@ -115,21 +117,20 @@ const StreamFilter = require("./lib/stream-filter"),
             }
         },
         async init() {
-            const chatClient = await this.client.getChatClient('default', DEBUG_LOG_LEVEL);
-            chatClient.onHost((chan, target) => {
+            this.chatClient.onHost((chan, target) => {
                 if(chan.endsWith(USERNAME)) {
                     this.currentChannel = target;
                 }
             });
-            chatClient.onHostsRemaining((channel, remainingHosts) => {
+            this.chatClient.onHostsRemaining((channel, remainingHosts) => {
                 if(channel.endsWith(USERNAME)) {
                     this.hostScheduler.reportRemaining(remainingHosts);
                 }
             });
-            const registered = new Promise((resolve) => chatClient.onRegister(resolve));
-            await chatClient.connect();
+            const registered = new Promise((resolve) => this.chatClient.onRegister(resolve));
+            await this.chatClient.connect();
             await registered;
-            await chatClient.join(`#${USERNAME}`);
+            await this.chatClient.join(`#${USERNAME}`);
             await this.update();
             setInterval(() => this.update().catch(console.error), MINUTE);
         }
