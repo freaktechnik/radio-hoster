@@ -127,9 +127,8 @@ const StreamFilter = require("./lib/stream-filter"),
                     this.hostScheduler.reportRemaining(remainingHosts);
                 }
             });
-            const registered = new Promise((resolve) => this.chatClient.onRegister(resolve));
             await this.chatClient.connect();
-            await registered;
+            await this.client.waitForRegistration();
             await this.chatClient.join(`#${USERNAME}`);
             await this.update();
             setInterval(() => this.update().catch(console.error), MINUTE);
