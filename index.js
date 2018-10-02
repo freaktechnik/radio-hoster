@@ -128,7 +128,7 @@ const StreamFilter = require("./lib/stream-filter"),
                 }
             });
             await this.chatClient.connect();
-            await this.client.waitForRegistration();
+            await this.chatClient.waitForRegistration();
             await this.chatClient.join(`#${USERNAME}`);
             await this.update();
             setInterval(() => this.update().catch(console.error), MINUTE);
