@@ -1,0 +1,33 @@
+{
+  "name": "radio-hoster",
+  "description": "Auto host talk show Twitch channels",
+  "scripts": {
+  },
+  "env": {
+    "CLIENT_ID": {
+      "required": true
+    },
+    "TOKEN": {
+      "required": true
+    },
+    "USERNAME": {
+      "required": true
+    }
+  },
+  "formation": {
+    "worker": {
+      "quantity": 1
+    },
+    "web": {
+      "quantity": 1
+    }
+  },
+  "addons": [
+
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
