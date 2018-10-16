@@ -8,7 +8,7 @@
     "twitch-chat-client": "^1.2.0"
   },
   "devDependencies": {
-    "@freaktechnik/eslint-config-node": "^6.5.0",
+    "@freaktechnik/eslint-config-node": "^6.5.4",
     "@freaktechnik/eslint-config-test": "^6.5.2",
     "ajv": "^6.5.4",
     "ava": "^0.25.0",
