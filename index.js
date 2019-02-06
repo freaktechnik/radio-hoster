@@ -1,5 +1,7 @@
 "use strict";
 
+//TODO filter based on some tags?
+
 const StreamFilter = require("./lib/stream-filter"),
     StreamSchedule = require("./lib/stream-schedule"),
     HostScheduler = require("./lib/host-scheduler"),
@@ -32,50 +34,71 @@ const StreamFilter = require("./lib/stream-filter"),
                 type: "live"
             }),*/
             new StreamFilter({
-                game: "Talk Shows",
+                game: "417752", // Talk Shows & Podcasts
                 languageCode: LANGUAGE,
                 type: "live"
             }),
             new StreamFilter({
-                game: "Music",
+                game: "26936", // Music and stuff
                 type: "live"
             })
         ],
+        /**
+         * @param {StreamFilter} filter - What to filter streams by.
+         * @returns {Promise<HelixStream[]>} Streams found based on filter.
+         */
         async getStreams(filter) {
             const streamParams = filter.getParams(),
-                streams = await this.client.streams.getStreams(...streamParams);
+                streams = await this.client.streams.getStreams(streamParams).getNext();
             return filter.filterStreams(streams);
         },
-        getBestStream(streams) {
-            const [ firstStream ] = streams;
-            return firstStream.channel.name;
+        /**
+         * Get the best matching stream's user name.
+         *
+         * @param {HelixStream[]} streams - List of candidates.
+         * @returns {Promise<string>} User name of the best stream.
+         */
+        async getBestStream(streams) {
+            const [ firstStream ] = streams,
+                user = await firstStream.getUser();
+            return user.name;
         },
-        currentId() {
+        /**
+         * @returns {Promise<string>} ID of the currently hosted user.
+         */
+        async currentId() {
             if(!this._cachedId || this._cachedId.username != this.currentChannel) {
                 this._cachedId = {
                     username: this.currentChannel
                 };
-                return this.client.helix.users.getUserByName(this.currentChannel).then((user) => {
-                    this._cachedId.id = user.id;
-                    return user.id;
-                });
+                const user = await this.client.helix.users.getUserByName(this.currentChannel);
+                this._cachedId.id = user.id;
             }
-            return Promise.resolve(this._cachedId.id);
+            return this._cachedId.id;
         },
+        /**
+         * @returns {Promise<boolean>} If the currently hosted channel should be considered live.
+         */
         async isCurrentChannelLive() {
             if(this.currentChannel && !IGNORE_LIVE.includes(this.currentChannel)) {
                 const currentId = await this.currentId(),
-                    currentStream = await this.client.streams.getStreamByChannel(currentId);
-                return this.filters.some((f) => f.filters.game === currentStream.game) && !currentStream.channel.status.includes("24/7") && currentStream.type === "live";
+                    currentStream = await this.client.helix.streams.getStreamByUserId(currentId);
+                return currentStream && this.filters.some((f) => f.filters.game === currentStream.gameId) && !currentStream.title.includes("24/7") && currentStream.type === "live";
             }
             return false;
         },
+        /**
+         * @returns {Promise<HelixStream[]|false>} Streams to show based on schedule.
+         */
         showLive() {
             if(this.streamSchedule.showRunning()) {
                 return this.getStreams(this.streamSchedule);
             }
-            return false;
+            return Promise.resolve(false);
         },
+        /**
+         * @returns {Promise<string>} User name to host.
+         */
         async getNextStream() {
             console.log("### Updating host ###");
             const showStream = await this.showLive();
@@ -96,6 +119,12 @@ const StreamFilter = require("./lib/stream-filter"),
             console.log("Nothing to do.");
             return this.currentChannel;
         },
+        /**
+         * Host stream.
+         *
+         * @param {string} login - User name of the stream to host.
+         * @returns {Promise} Resolves once stream is hosted.
+         */
         async setNextStream(login) {
             try {
                 await this.chatClient.host(login);
@@ -107,6 +136,9 @@ const StreamFilter = require("./lib/stream-filter"),
                 console.warn("Can't host", login, "atm");
             }
         },
+        /**
+         * @returns {Promise} Resolves when all operations are done.
+         */
         async update() {
             if(this.hostScheduler.shouldCheck()) {
                 const nextStream = await this.getNextStream(),
@@ -116,6 +148,9 @@ const StreamFilter = require("./lib/stream-filter"),
                 }
             }
         },
+        /**
+         * @returns {Promise} Resolves when the initial channel is hosted.
+         */
         async init() {
             this.chatClient.onHost((chan, target) => {
                 if(chan.endsWith(USERNAME)) {
