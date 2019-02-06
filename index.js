@@ -49,7 +49,7 @@ const StreamFilter = require("./lib/stream-filter"),
          */
         async getStreams(filter) {
             const streamParams = filter.getParams(),
-                streams = await this.client.streams.getStreams(streamParams).getNext();
+                streams = await this.client.helix.streams.getStreams(streamParams).getNext();
             return filter.filterStreams(streams);
         },
         /**
@@ -140,16 +140,12 @@ const StreamFilter = require("./lib/stream-filter"),
          * @returns {Promise} Resolves when all operations are done.
          */
         async update() {
-            console.log("update");
             if(this.hostScheduler.shouldCheck()) {
                 const nextStream = await this.getNextStream(),
                     nextShow = this.streamSchedule.getNextScheduledShow();
                 if(nextStream != this.currentChannel && this.hostScheduler.canHost(nextStream, nextShow)) {
                     await this.setNextStream(nextStream);
                 }
-            }
-            else {
-                console.log("shouldn't check");
             }
         },
         /**
