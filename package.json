@@ -10,9 +10,9 @@
   "devDependencies": {
     "@freaktechnik/eslint-config-node": "^6.5.4",
     "@freaktechnik/eslint-config-test": "^6.5.4",
-    "ajv": "^6.8.1",
+    "ajv": "^6.9.1",
     "ava": "^1.2.1",
-    "eslint": "^5.13.0"
+    "eslint": "^5.14.0"
   },
   "scripts": {
     "lint": "eslint index.js lib/ test/ --ext js,json",
