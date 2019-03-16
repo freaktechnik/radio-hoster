@@ -20,7 +20,9 @@ Twitch.withCredentials(CLIENT_ID, TOKEN).then((client) => {
         hostScheduler: new HostScheduler(),
         streamSchedule: new StreamSchedule(LANGUAGE),
         client,
-        chatClient: TwitchChatClient.forTwitchClient(client),
+        chatClient: TwitchChatClient.forTwitchClient(client, {
+            legacyScopes: true
+        }),
         filters: [
             /*new StreamFilter({
                 game: "Gamescom 2017",
