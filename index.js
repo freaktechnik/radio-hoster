@@ -13,20 +13,14 @@ const StreamFilter = require("./lib/stream-filter"),
     } = process.env,
     LANGUAGE = "en",
     IGNORE_LIVE = require(`./data/ignore-livestate.${LANGUAGE}.json`),
-    MINUTE = 60000,
+    MINUTE = 60000;
 
-    client = Twitch.withCredentials(
-        CLIENT_ID,
-        TOKEN,
-        null,
-        {}
-    ),
-
-    RadioHoster = {
+Twitch.withCredentials(CLIENT_ID, TOKEN).then((client) => {
+    const RadioHoster = {
         hostScheduler: new HostScheduler(),
         streamSchedule: new StreamSchedule(LANGUAGE),
         client,
-        chatClient: new TwitchChatClient(USERNAME, TOKEN, client),
+        chatClient: TwitchChatClient.forTwitchClient(client),
         filters: [
             /*new StreamFilter({
                 game: "Gamescom 2017",
@@ -170,4 +164,6 @@ const StreamFilter = require("./lib/stream-filter"),
         }
     };
 
-RadioHoster.init().catch(console.error);
+    return RadioHoster.init();
+})
+    .catch(console.error);
