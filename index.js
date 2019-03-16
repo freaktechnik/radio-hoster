@@ -21,8 +21,11 @@ Twitch.withCredentials(CLIENT_ID, TOKEN)
         TwitchChatClient.forTwitchClient(client, {
             legacyScopes: true
         })
-    ])
-    .then(([client, chatClient]) => {
+    ]))
+    .then(([
+        client,
+        chatClient
+    ]) => {
         const RadioHoster = {
             hostScheduler: new HostScheduler(),
             streamSchedule: new StreamSchedule(LANGUAGE),
