@@ -84,11 +84,11 @@ Twitch.withCredentials(CLIENT_ID, TOKEN).then((client) => {
         /**
          * @returns {Promise<HelixStream[]|false>} Streams to show based on schedule.
          */
-        showLive() {
+        async showLive() {
             if(this.streamSchedule.showRunning()) {
                 return this.getStreams(this.streamSchedule);
             }
-            return Promise.resolve(false);
+            return false;
         },
         /**
          * @returns {Promise<string>} User name to host.
