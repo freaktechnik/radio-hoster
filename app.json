@@ -1,27 +1,30 @@
 {
   "name": "radio-hoster",
   "description": "Auto host talk show Twitch channels",
-  "scripts": {
-  },
+  "keywords": [
+    "twitch"
+  ],
+  "repository": "https://github.com/freaktechnik/radio-hoster",
   "env": {
     "CLIENT_ID": {
+      "description": "Twitch API Client ID",
       "required": true
     },
     "TOKEN": {
+      "description": "Twitch API token",
       "required": true
     },
     "USERNAME": {
+      "description": "Twitch channel username to host in",
       "required": true
-    }
+    },
+    "NPM_CONFIG_PRODUCTION": true
   },
   "formation": {
     "worker": {
       "quantity": 1
     }
   },
-  "addons": [
-
-  ],
   "buildpacks": [
     {
       "url": "heroku/nodejs"
