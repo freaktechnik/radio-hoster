@@ -53,7 +53,7 @@ Twitch.withCredentials(CLIENT_ID, TOKEN)
              */
             async getStreams(filter) {
                 const streamParams = filter.getParams(),
-                    streams = await this.client.helix.streams.getStreams(streamParams).getNext();
+                    { data: streams } = await this.client.helix.streams.getStreams(streamParams);
                 return filter.filterStreams(streams);
             },
             /**
