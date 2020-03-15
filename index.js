@@ -52,8 +52,8 @@ Twitch.withCredentials(CLIENT_ID, TOKEN)
              * @returns {Promise<HelixStream[]>} Streams found based on filter.
              */
             async getStreams(filter) {
-                const streamParams = filter.getParams(),
-                    { data: streams } = await this.client.helix.streams.getStreams(streamParams);
+                const streamParameters = filter.getParams(),
+                    { data: streams } = await this.client.helix.streams.getStreams(streamParameters);
                 return filter.filterStreams(streams);
             },
             /**
@@ -136,7 +136,7 @@ Twitch.withCredentials(CLIENT_ID, TOKEN)
                     this.currentChannel = login;
                     console.log("Now hosting", login);
                 }
-                catch(e) {
+                catch(error) {
                     console.warn("Can't host", login, "atm");
                 }
             },
