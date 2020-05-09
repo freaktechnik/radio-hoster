@@ -5,7 +5,8 @@
   "main": "index.js",
   "dependencies": {
     "twitch": "^4.0.9",
-    "twitch-chat-client": "^4.0.7"
+    "twitch-chat-client": "^4.0.7",
+    "snyk": "^1.316.2"
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",
@@ -18,7 +19,9 @@
   "scripts": {
     "lint": "eslint index.js lib/ test/ --ext js,json",
     "test": "npm run lint && ava",
-    "start": "node index.js"
+    "start": "node index.js",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -43,5 +46,6 @@
     "lib/*",
     "data/*",
     "schemas/*"
-  ]
+  ],
+  "snyk": true
 }
