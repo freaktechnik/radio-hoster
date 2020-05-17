@@ -6,7 +6,7 @@
   "dependencies": {
     "twitch": "^4.0.9",
     "twitch-chat-client": "^4.0.8",
-    "snyk": "^1.319.2"
+    "snyk": "^1.321.0"
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",
