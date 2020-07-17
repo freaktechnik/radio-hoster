@@ -125,7 +125,7 @@ const StreamFilter = require("./lib/stream-filter"),
          */
         async setNextStream(login) {
             try {
-                await this.chatClient.host(undefined, login);
+                await this.chatClient.host(USERNAME, login);
                 this.hostScheduler.onHost();
                 this.currentChannel = login;
                 console.log("Now hosting", login);
