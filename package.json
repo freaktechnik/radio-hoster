@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "twitch": "^4.2.2",
-    "twitch-chat-client": "^4.1.4"
+    "twitch-chat-client": "^4.2.2"
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",
