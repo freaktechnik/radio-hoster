@@ -5,8 +5,9 @@
 const StreamFilter = require("./lib/stream-filter"),
     StreamSchedule = require("./lib/stream-schedule"),
     HostScheduler = require("./lib/host-scheduler"),
-    { default: Twitch } = require("twitch"),
-    { default: TwitchChatClient } = require("twitch-chat-client"),
+    { ApiClient } = require("twitch"),
+    { ChatClient } = require("twitch-chat-client"),
+    { StaticAuthProvider } = require("twitch-auth"),
 
     {
         CLIENT_ID, TOKEN, USERNAME
@@ -14,8 +15,9 @@ const StreamFilter = require("./lib/stream-filter"),
     LANGUAGE = "en",
     IGNORE_LIVE = require(`./data/ignore-livestate.${LANGUAGE}.json`),
     MINUTE = 60000,
-    client = Twitch.withCredentials(CLIENT_ID, TOKEN),
-    chatClient = TwitchChatClient.forTwitchClient(client, {
+    authProvider = new StaticAuthProvider(CLIENT_ID, TOKEN, [ 'chat_login' ]),
+    client = new ApiClient({ authProvider }),
+    chatClient = new ChatClient(authProvider, {
         legacyScopes: true,
         requestMembershipEvents: false,
         channels: [ `#${USERNAME}` ]
