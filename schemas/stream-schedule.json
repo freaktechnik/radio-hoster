@@ -18,11 +18,13 @@
             },
             "start": {
                 "type": "string",
-                "length": 7
+                "maxLength": 7,
+                "minLength": 7
             },
             "end": {
                 "type": "string",
-                "length": 7
+                "maxLength": 7,
+                "minLength": 7
             }
         },
         "required": [
