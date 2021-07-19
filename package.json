@@ -4,7 +4,7 @@
   "description": "Auto hosts talk shows on Twitch to create a radio channel of sorts.",
   "main": "index.js",
   "dependencies": {
-    "twitch": "^4.6.0",
+    "twitch": "^4.6.2",
     "twitch-auth": "^4.6.0",
     "twitch-chat-client": "^4.6.0"
   },
