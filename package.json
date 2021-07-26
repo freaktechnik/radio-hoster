@@ -6,7 +6,7 @@
   "dependencies": {
     "twitch": "^4.6.2",
     "twitch-auth": "^4.6.2",
-    "twitch-chat-client": "^4.6.2"
+    "twitch-chat-client": "^4.6.4"
   },
   "devDependencies": {
     "@ava/babel": "^2.0.0",
