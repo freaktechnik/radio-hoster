@@ -1,23 +1,22 @@
-"use strict";
+import fs from "fs";
+import StreamFilter from "./lib/stream-filter.js";
+import StreamSchedule from "./lib/stream-schedule.js";
+import HostScheduler from "./lib/host-scheduler.js";
+import { ApiClient } from "@twurple/api";
+import { ChatClient } from "@twurple/chat";
+import { StaticAuthProvider } from "@twurple/auth";
 
 //TODO filter based on some tags?
-
-const StreamFilter = require("./lib/stream-filter"),
-    StreamSchedule = require("./lib/stream-schedule"),
-    HostScheduler = require("./lib/host-scheduler"),
-    { ApiClient } = require("twitch"),
-    { ChatClient } = require("twitch-chat-client"),
-    { StaticAuthProvider } = require("twitch-auth"),
-
-    {
+const {
         CLIENT_ID, TOKEN, USERNAME
     } = process.env,
     LANGUAGE = "en",
-    IGNORE_LIVE = require(`./data/ignore-livestate.${LANGUAGE}.json`),
+    IGNORE_LIVE = JSON.parse(fs.readFileSync(`./data/ignore-livestate.${LANGUAGE}.json`, { encoding: 'utf8' })),
     MINUTE = 60000,
     authProvider = new StaticAuthProvider(CLIENT_ID, TOKEN, [ 'chat_login' ]),
     client = new ApiClient({ authProvider }),
-    chatClient = new ChatClient(authProvider, {
+    chatClient = new ChatClient({
+        authProvider,
         legacyScopes: true,
         requestMembershipEvents: false,
         channels: [ `#${USERNAME}` ]
@@ -170,4 +169,4 @@ const StreamFilter = require("./lib/stream-filter"),
         }
     };
 
-return RadioHoster.init();
+RadioHoster.init();

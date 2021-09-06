@@ -3,13 +3,8 @@
   "version": "1.0.0",
   "description": "Auto hosts talk shows on Twitch to create a radio channel of sorts.",
   "main": "index.js",
-  "dependencies": {
-    "twitch": "^4.6.7",
-    "twitch-auth": "^4.6.7",
-    "twitch-chat-client": "^4.6.7"
-  },
+  "type": "module",
   "devDependencies": {
-    "@ava/babel": "^2.0.0",
     "@freaktechnik/eslint-config-node": "^8.0.2",
     "@freaktechnik/eslint-config-test": "^8.0.2",
     "ajv": "^8.6.2",
@@ -32,10 +27,7 @@
   },
   "homepage": "https://github.com/freaktechnik/radio-hoster#readme",
   "engines": {
-    "node": ">=10.18.0"
-  },
-  "ava": {
-    "babel": true
+    "node": ">=12.0.0"
   },
   "files": [
     "index.js",
@@ -44,5 +36,10 @@
     "lib/*",
     "data/*",
     "schemas/*"
-  ]
+  ],
+  "dependencies": {
+    "@twurple/api": "^5.0.0-pre.17",
+    "@twurple/auth": "^5.0.0-pre.17",
+    "@twurple/chat": "^5.0.0-pre.17"
+  }
 }
