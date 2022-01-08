@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 import StreamFilter from "./lib/stream-filter.js";
 import StreamSchedule from "./lib/stream-schedule.js";
 import HostScheduler from "./lib/host-scheduler.js";
@@ -11,7 +11,7 @@ const {
         CLIENT_ID, TOKEN, USERNAME
     } = process.env,
     LANGUAGE = "en",
-    IGNORE_LIVE = JSON.parse(fs.readFileSync(`./data/ignore-livestate.${LANGUAGE}.json`, { encoding: 'utf8' })),
+    IGNORE_LIVE = JSON.parse(fs.readFileSync(`./data/ignore-livestate.${LANGUAGE}.json`)),
     MINUTE = 60000,
     authProvider = new StaticAuthProvider(CLIENT_ID, TOKEN, [ 'chat_login' ]),
     client = new ApiClient({ authProvider }),
@@ -48,7 +48,7 @@ const {
          */
         async getStreams(filter) {
             const streamParameters = filter.getParams(),
-                { data: streams } = await this.client.helix.streams.getStreams(streamParameters);
+                { data: streams } = await this.client.streams.getStreams(streamParameters);
             return filter.filterStreams(streams);
         },
         /**
@@ -70,7 +70,7 @@ const {
                 this._cachedId = {
                     username: this.currentChannel
                 };
-                const user = await this.client.helix.users.getUserByName(this.currentChannel);
+                const user = await this.client.sers.getUserByName(this.currentChannel);
                 this._cachedId.id = user.id;
             }
             return this._cachedId.id;
@@ -81,7 +81,7 @@ const {
         async isCurrentChannelLive() {
             if(this.currentChannel && !IGNORE_LIVE.includes(this.currentChannel)) {
                 const currentId = await this.currentId(),
-                    currentStream = await this.client.helix.streams.getStreamByUserId(currentId);
+                    currentStream = await this.client.streams.getStreamByUserId(currentId);
                 return currentStream && this.filters.some((f) => f.filters.game === currentStream.gameId) && !currentStream.title.includes("24/7") && currentStream.type === "live";
             }
             return false;
