@@ -9,7 +9,7 @@
     "@freaktechnik/eslint-config-test": "^9.0.1",
     "ajv": "^8.11.0",
     "ava": "^4.2.0",
-    "eslint": "^8.14.0"
+    "eslint": "^8.15.0"
   },
   "scripts": {
     "lint": "eslint index.js lib/ test/ --ext js,json",
