@@ -39,7 +39,7 @@
   ],
   "dependencies": {
     "@twurple/api": "^5.1.8",
-    "@twurple/auth": "^5.1.8",
+    "@twurple/auth": "^5.2.0",
     "@twurple/chat": "^5.1.8"
   }
 }
